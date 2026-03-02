@@ -3,47 +3,47 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../services/api';
 
 interface EmissionEntry {
-  id:           string;
-  factor:       number;
-  factor_name:  string;
-  category_slug:string;
-  category_icon:string;
-  quantity:     number;
-  unit:         string;
-  co2_kg:       number;
-  note:         string;
-  date:         string;
-  created_at:   string;
+  id: string;
+  factor: number;
+  factor_name: string;
+  category_slug: string;
+  category_icon: string;
+  quantity: number;
+  unit: string;
+  co2_kg: number;
+  note: string;
+  date: string;
+  created_at: string;
 }
 
 interface TodaySummary {
-  date:          string;
-  total_co2:     number;
-  entry_count:   number;
-  daily_goal:    number;
+  date: string;
+  total_co2: number;
+  entry_count: number;
+  daily_goal: number;
   goal_achieved: boolean;
-  remaining:     number;
-  by_category:   Record<string, number>;
+  remaining: number;
+  by_category: Record<string, number>;
 }
 
 interface EmissionState {
-  entries:       EmissionEntry[];
-  todaySummary:  TodaySummary | null;
-  categories:    any[];
-  factors:       any[];
-  isLoading:     boolean;
-  isSubmitting:  boolean;
-  error:         string | null;
+  entries: EmissionEntry[];
+  todaySummary: TodaySummary | null;
+  categories: any[];
+  factors: any[];
+  isLoading: boolean;
+  isSubmitting: boolean;
+  error: string | null;
 }
 
 const initialState: EmissionState = {
-  entries:      [],
+  entries: [],
   todaySummary: null,
-  categories:   [],
-  factors:      [],
-  isLoading:    false,
+  categories: [],
+  factors: [],
+  isLoading: false,
   isSubmitting: false,
-  error:        null,
+  error: null,
 };
 
 // ── THUNKS ────────────────────────────────────────────────────────────────────
@@ -114,17 +114,17 @@ const emissionSlice = createSlice({
     builder.addCase(fetchTodaySummary.fulfilled, (s, a) => { s.todaySummary = a.payload; });
 
     // Entries
-    builder.addCase(fetchEntries.pending,   (s) => { s.isLoading = true; });
+    builder.addCase(fetchEntries.pending, (s) => { s.isLoading = true; });
     builder.addCase(fetchEntries.fulfilled, (s, a) => { s.isLoading = false; s.entries = a.payload; });
-    builder.addCase(fetchEntries.rejected,  (s) => { s.isLoading = false; });
+    builder.addCase(fetchEntries.rejected, (s) => { s.isLoading = false; });
 
     // Add entry
-    builder.addCase(addEntry.pending,   (s) => { s.isSubmitting = true; s.error = null; });
+    builder.addCase(addEntry.pending, (s) => { s.isSubmitting = true; s.error = null; });
     builder.addCase(addEntry.fulfilled, (s, a) => {
       s.isSubmitting = false;
       s.entries.unshift(a.payload);
     });
-    builder.addCase(addEntry.rejected,  (s, a) => { s.isSubmitting = false; s.error = String(a.payload); });
+    builder.addCase(addEntry.rejected, (s, a) => { s.isSubmitting = false; s.error = String(a.payload); });
 
     // Delete entry
     builder.addCase(deleteEntry.fulfilled, (s, a) => {
@@ -132,8 +132,12 @@ const emissionSlice = createSlice({
     });
 
     // Categories & Factors
-    builder.addCase(fetchCategories.fulfilled, (s, a) => { s.categories = a.payload; });
-    builder.addCase(fetchFactors.fulfilled,    (s, a) => { s.factors = a.payload; });
+    builder.addCase(fetchCategories.fulfilled, (s, a) => {
+      s.categories = a.payload?.results ?? a.payload ?? [];
+    });
+    builder.addCase(fetchFactors.fulfilled, (s, a) => {
+      s.factors = a.payload?.results ?? a.payload ?? [];
+    });
   },
 });
 

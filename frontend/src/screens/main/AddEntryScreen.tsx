@@ -1,12 +1,12 @@
 // src/screens/main/AddEntryScreen.tsx
 import React, { useState, useEffect } from 'react';
+import { addEntry, fetchCategories, fetchFactors, fetchTodaySummary } from '../../store/slices/emissionSlice';
 import {
   View, Text, TouchableOpacity, ScrollView,
   TextInput, StyleSheet, ActivityIndicator, Alert,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
-import { addEntry, fetchCategories, fetchFactors } from '../../store/slices/emissionSlice';
 import { colors, spacing, radius, typography, shadows, getCategoryColor, getCategoryIcon } from '../../theme';
 import { format } from 'date-fns';
 
@@ -16,11 +16,11 @@ export default function AddEntryScreen({ navigation, route }: any) {
   const dispatch = useDispatch<AppDispatch>();
   const { categories, factors, isSubmitting } = useSelector((s: RootState) => s.emissions);
 
-  const [step,             setStep]         = useState<Step>('category');
-  const [selectedCategory, setCategory]     = useState<string>(route.params?.category ?? '');
-  const [selectedFactor,   setFactor]       = useState<any>(null);
-  const [quantity,         setQuantity]     = useState('');
-  const [note,             setNote]         = useState('');
+  const [step, setStep] = useState<Step>('category');
+  const [selectedCategory, setCategory] = useState<string>(route.params?.category ?? '');
+  const [selectedFactor, setFactor] = useState<any>(null);
+  const [quantity, setQuantity] = useState('');
+  const [note, setNote] = useState('');
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -46,13 +46,14 @@ export default function AddEntryScreen({ navigation, route }: any) {
     }
 
     const result = await dispatch(addEntry({
-      factor:   selectedFactor.id,
+      factor: selectedFactor.id,
       quantity: qty,
       note,
-      date:     format(new Date(), 'yyyy-MM-dd'),
+      date: format(new Date(), 'yyyy-MM-dd'),
     }));
 
     if (addEntry.fulfilled.match(result)) {
+      dispatch(fetchTodaySummary()); // bunu ekle
       Alert.alert(
         '✅ Kaydedildi',
         `${selectedFactor.name_tr}: ${result.payload.co2_kg} kg CO₂`,
@@ -178,41 +179,41 @@ export default function AddEntryScreen({ navigation, route }: any) {
 }
 
 const styles = StyleSheet.create({
-  container:    { flex: 1, backgroundColor: colors.background },
-  stepBar:      { flexDirection: 'row', justifyContent: 'center', gap: spacing['3xl'], padding: spacing.lg, backgroundColor: colors.surface, borderBottomWidth: 1, borderBottomColor: colors.border },
-  stepItem:     { alignItems: 'center', gap: 4 },
-  stepDot:      { width: 28, height: 28, borderRadius: 14, backgroundColor: colors.g100, justifyContent: 'center', alignItems: 'center' },
-  stepDotActive:{ backgroundColor: colors.g700 },
-  stepDotDone:  { backgroundColor: colors.g500 },
-  stepNum:      { fontSize: 12, fontWeight: '700', color: '#fff' },
-  stepLabel:    { fontSize: typography.size.xs, color: colors.textSecondary },
+  container: { flex: 1, backgroundColor: colors.background },
+  stepBar: { flexDirection: 'row', justifyContent: 'center', gap: spacing['3xl'], padding: spacing.lg, backgroundColor: colors.surface, borderBottomWidth: 1, borderBottomColor: colors.border },
+  stepItem: { alignItems: 'center', gap: 4 },
+  stepDot: { width: 28, height: 28, borderRadius: 14, backgroundColor: colors.g100, justifyContent: 'center', alignItems: 'center' },
+  stepDotActive: { backgroundColor: colors.g700 },
+  stepDotDone: { backgroundColor: colors.g500 },
+  stepNum: { fontSize: 12, fontWeight: '700', color: '#fff' },
+  stepLabel: { fontSize: typography.size.xs, color: colors.textSecondary },
 
-  content:      { padding: spacing.lg, paddingBottom: 100 },
-  stepTitle:    { fontSize: typography.size.xl, fontWeight: '700', color: colors.text, marginBottom: spacing.lg },
-  back:         { color: colors.g700, fontWeight: '600', marginBottom: spacing.lg },
+  content: { padding: spacing.lg, paddingBottom: 100 },
+  stepTitle: { fontSize: typography.size.xl, fontWeight: '700', color: colors.text, marginBottom: spacing.lg },
+  back: { color: colors.g700, fontWeight: '600', marginBottom: spacing.lg },
 
-  grid:         { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
-  catCard:      { width: '30%', aspectRatio: 1, borderRadius: radius.lg, backgroundColor: colors.surface, justifyContent: 'center', alignItems: 'center', borderWidth: 2, ...shadows.sm },
-  catCardIcon:  { fontSize: 28 },
-  catCardName:  { fontSize: typography.size.xs, fontWeight: '600', color: colors.text, marginTop: 4, textAlign: 'center' },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
+  catCard: { width: '30%', aspectRatio: 1, borderRadius: radius.lg, backgroundColor: colors.surface, justifyContent: 'center', alignItems: 'center', borderWidth: 2, ...shadows.sm },
+  catCardIcon: { fontSize: 28 },
+  catCardName: { fontSize: typography.size.xs, fontWeight: '600', color: colors.text, marginTop: 4, textAlign: 'center' },
 
-  factorRow:    { backgroundColor: colors.surface, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.sm, flexDirection: 'row', alignItems: 'center', ...shadows.sm },
+  factorRow: { backgroundColor: colors.surface, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.sm, flexDirection: 'row', alignItems: 'center', ...shadows.sm },
   factorRowSelected: { borderWidth: 2, borderColor: colors.g500 },
-  factorName:   { fontSize: typography.size.base, fontWeight: '600', color: colors.text },
-  factorMeta:   { fontSize: typography.size.xs, color: colors.textSecondary, marginTop: 2 },
+  factorName: { fontSize: typography.size.base, fontWeight: '600', color: colors.text },
+  factorMeta: { fontSize: typography.size.xs, color: colors.textSecondary, marginTop: 2 },
 
   selectedInfo: { backgroundColor: colors.g50, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.lg },
   selectedName: { fontSize: typography.size.base, fontWeight: '700', color: colors.g800 },
   selectedMeta: { fontSize: typography.size.xs, color: colors.textSecondary, marginTop: 2 },
 
-  inputLabel:   { fontSize: typography.size.sm, fontWeight: '600', color: colors.text, marginBottom: spacing.sm },
-  input:        { backgroundColor: colors.surface, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, padding: spacing.md, fontSize: typography.size.base, color: colors.text, marginBottom: spacing.lg },
+  inputLabel: { fontSize: typography.size.sm, fontWeight: '600', color: colors.text, marginBottom: spacing.sm },
+  input: { backgroundColor: colors.surface, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, padding: spacing.md, fontSize: typography.size.base, color: colors.text, marginBottom: spacing.lg },
 
-  preview:      { backgroundColor: colors.g800, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.lg, alignItems: 'center' },
+  preview: { backgroundColor: colors.g800, borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.lg, alignItems: 'center' },
   previewLabel: { fontSize: typography.size.xs, color: colors.g300 },
   previewValue: { fontSize: typography.size['2xl'], fontWeight: '800', color: '#fff', marginTop: 2 },
 
-  submitBtn:         { backgroundColor: colors.g700, borderRadius: radius.lg, padding: spacing.lg, alignItems: 'center', marginTop: spacing.md },
+  submitBtn: { backgroundColor: colors.g700, borderRadius: radius.lg, padding: spacing.lg, alignItems: 'center', marginTop: spacing.md },
   submitBtnDisabled: { opacity: 0.5 },
-  submitBtnText:     { color: '#fff', fontSize: typography.size.base, fontWeight: '700' },
+  submitBtnText: { color: '#fff', fontSize: typography.size.base, fontWeight: '700' },
 });

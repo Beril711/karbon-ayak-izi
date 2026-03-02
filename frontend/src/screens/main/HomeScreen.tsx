@@ -1,5 +1,7 @@
 // src/screens/main/HomeScreen.tsx
 import React, { useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
   StyleSheet, Dimensions, RefreshControl,
@@ -15,13 +17,15 @@ const CATEGORIES = ['transport', 'energy', 'food', 'waste', 'water', 'digital'];
 
 export default function HomeScreen({ navigation }: any) {
   const dispatch = useDispatch<AppDispatch>();
-  const { user }         = useSelector((s: RootState) => s.auth);
+  const { user } = useSelector((s: RootState) => s.auth);
   const { todaySummary, isLoading } = useSelector((s: RootState) => s.emissions);
-  const { xp, streak }  = useSelector((s: RootState) => s.gamification);
+  const { xp, streak } = useSelector((s: RootState) => s.gamification);
 
-  useEffect(() => {
-    dispatch(fetchTodaySummary());
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(fetchTodaySummary());
+    }, [])
+  );
 
   const goalPct = todaySummary
     ? Math.min(100, (todaySummary.total_co2 / todaySummary.daily_goal) * 100)
@@ -132,40 +136,40 @@ export default function HomeScreen({ navigation }: any) {
 }
 
 const styles = StyleSheet.create({
-  container:     { flex: 1, backgroundColor: colors.background },
-  content:       { padding: spacing.lg, paddingBottom: spacing['4xl'] },
-  header:        { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.lg },
-  greeting:      { fontSize: typography.size.xl, fontWeight: '700', color: colors.text },
-  subGreeting:   { fontSize: typography.size.sm, color: colors.textSecondary, marginTop: 2 },
-  avatar:        { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.g700, justifyContent: 'center', alignItems: 'center' },
-  avatarText:    { color: '#fff', fontWeight: '700', fontSize: typography.size.base },
+  container: { flex: 1, backgroundColor: colors.background },
+  content: { padding: spacing.lg, paddingBottom: spacing['4xl'] },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.lg },
+  greeting: { fontSize: typography.size.xl, fontWeight: '700', color: colors.text },
+  subGreeting: { fontSize: typography.size.sm, color: colors.textSecondary, marginTop: 2 },
+  avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.g700, justifyContent: 'center', alignItems: 'center' },
+  avatarText: { color: '#fff', fontWeight: '700', fontSize: typography.size.base },
 
-  statsRow:      { flexDirection: 'row', gap: spacing.md, marginBottom: spacing.lg },
-  statChip:      { flex: 1, backgroundColor: colors.surface, borderRadius: radius.md, padding: spacing.md, alignItems: 'center', ...shadows.sm },
-  statIcon:      { fontSize: 20, marginBottom: 2 },
-  statValue:     { fontSize: typography.size.base, fontWeight: '700', color: colors.text },
-  statLabel:     { fontSize: typography.size.xs, color: colors.textSecondary },
+  statsRow: { flexDirection: 'row', gap: spacing.md, marginBottom: spacing.lg },
+  statChip: { flex: 1, backgroundColor: colors.surface, borderRadius: radius.md, padding: spacing.md, alignItems: 'center', ...shadows.sm },
+  statIcon: { fontSize: 20, marginBottom: 2 },
+  statValue: { fontSize: typography.size.base, fontWeight: '700', color: colors.text },
+  statLabel: { fontSize: typography.size.xs, color: colors.textSecondary },
 
-  card:          { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.lg, marginBottom: spacing.md, ...shadows.sm },
-  co2Card:       { backgroundColor: colors.g800 },
-  co2Label:      { fontSize: typography.size.sm, color: colors.g300, marginBottom: 4 },
-  co2Value:      { fontSize: typography.size['4xl'], fontWeight: '800', color: '#fff' },
-  co2Unit:       { fontSize: typography.size.lg, fontWeight: '400' },
-  goalStatus:    { fontSize: typography.size.sm, marginTop: spacing.sm },
+  card: { backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.lg, marginBottom: spacing.md, ...shadows.sm },
+  co2Card: { backgroundColor: colors.g800 },
+  co2Label: { fontSize: typography.size.sm, color: colors.g300, marginBottom: 4 },
+  co2Value: { fontSize: typography.size['4xl'], fontWeight: '800', color: '#fff' },
+  co2Unit: { fontSize: typography.size.lg, fontWeight: '400' },
+  goalStatus: { fontSize: typography.size.sm, marginTop: spacing.sm },
 
   progressTrack: { height: 8, backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 4, marginTop: spacing.md, overflow: 'hidden' },
-  progressFill:  { height: 8, borderRadius: 4 },
+  progressFill: { height: 8, borderRadius: 4 },
   progressLabel: { fontSize: typography.size.xs, color: colors.g300, marginTop: 4 },
 
-  sectionTitle:  { fontSize: typography.size.md, fontWeight: '700', color: colors.text, marginBottom: spacing.md },
+  sectionTitle: { fontSize: typography.size.md, fontWeight: '700', color: colors.text, marginBottom: spacing.md },
 
-  catRow:        { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.sm },
-  catIcon:       { fontSize: 18, width: 28 },
-  catBarWrap:    { flex: 1, height: 8, backgroundColor: colors.g50, borderRadius: 4, overflow: 'hidden' },
-  catBar:        { height: 8, borderRadius: 4 },
-  catVal:        { width: 45, fontSize: typography.size.xs, color: colors.textSecondary, textAlign: 'right' },
+  catRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.sm },
+  catIcon: { fontSize: 18, width: 28 },
+  catBarWrap: { flex: 1, height: 8, backgroundColor: colors.g50, borderRadius: 4, overflow: 'hidden' },
+  catBar: { height: 8, borderRadius: 4 },
+  catVal: { width: 45, fontSize: typography.size.xs, color: colors.textSecondary, textAlign: 'right' },
 
-  quickGrid:     { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
-  quickBtn:      { width: (width - spacing.lg * 2 - spacing.md * 5) / 6, aspectRatio: 1, borderRadius: radius.md, backgroundColor: colors.surface, justifyContent: 'center', alignItems: 'center', borderWidth: 2, ...shadows.sm },
-  quickIcon:     { fontSize: 22 },
+  quickGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
+  quickBtn: { width: (width - spacing.lg * 2 - spacing.md * 5) / 6, aspectRatio: 1, borderRadius: radius.md, backgroundColor: colors.surface, justifyContent: 'center', alignItems: 'center', borderWidth: 2, ...shadows.sm },
+  quickIcon: { fontSize: 22 },
 });
