@@ -36,6 +36,7 @@ const FEATURES: FeatureItem[] = [
     title: 'Kampüs Nefesi',
     description: 'Kampüsün anlık karbon ritmini hisset',
     borderColor: '#26A69A',
+    screen: 'CampusBreath',
   },
   {
     icon: '⏳',
@@ -56,7 +57,7 @@ const FEATURES: FeatureItem[] = [
     title: 'Duygu-Karbon Haritası',
     description: 'Duygularınla karbon ayak izin arasındaki bağlantı',
     borderColor: '#E91E63',
-    screen: 'EmotionCarbon',
+    screen: 'EmotionCarbonMap',
   },
   {
     icon: '🤝',

@@ -31,6 +31,14 @@ import CarbonDNAScreen from '../screens/ai/CarbonDNAScreen';
 import CarbonTwinScreen from '../screens/ai/CarbonTwinScreen';
 import TimeMachineScreen from '../screens/ai/TimeMachineScreen';
 import CarbonMemoryScreen from '../screens/ai/CarbonMemoryScreen';
+import EmotionCarbonMapScreen from '../screens/ai/EmotionCarbonMapScreen';
+import SocialContractScreen from '../screens/ai/SocialContractScreen';
+import CarbonSymphonyScreen from '../screens/ai/CarbonSymphonyScreen';
+import CampusBreathScreen from '../screens/ai/CampusBreathScreen';
+import BioSyncScreen from '../screens/ai/BioSyncScreen';
+import CarbonExchangeScreen from '../screens/main/CarbonExchangeScreen';
+import EditProfileScreen from '../screens/main/EditProfileScreen';
+import SettingsScreen from '../screens/main/SettingsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -253,12 +261,18 @@ function CustomDrawerPanel({ isOpen, onClose, navigation }: {
   }, [isOpen]);
 
   const menuItems = [
-    { label: 'Keşfet', icon: CompassIcon, onPress: () => { } },
-    { label: 'AI Özellikleri', icon: AIIcon, onPress: () => { } },
-    { label: 'Karbon DNA', icon: DNAIcon, onPress: () => { } },
-    { label: 'Karbon İkizi', icon: ProfileIcon, onPress: () => { } },
-    { label: 'Zaman Makinesi', icon: ClockIcon, onPress: () => { } },
-    { label: 'Karbon Hafıza', icon: BrainIcon, onPress: () => { } },
+    { label: 'Keşfet', icon: CompassIcon, onPress: () => navigation.navigate('Explore') },
+    { label: 'AI Özellikleri', icon: AIIcon, onPress: () => navigation.navigate('AIHub') },
+    { label: 'Karbon DNA', icon: DNAIcon, onPress: () => navigation.navigate('CarbonDNA') },
+    { label: 'Karbon İkizi', icon: ProfileIcon, onPress: () => navigation.navigate('CarbonTwin') },
+    { label: 'Zaman Makinesi', icon: ClockIcon, onPress: () => navigation.navigate('TimeMachine') },
+    { label: 'Karbon Hafıza', icon: BrainIcon, onPress: () => navigation.navigate('CarbonMemory') },
+    { label: 'Duygu-Karbon Haritası', icon: AIIcon, onPress: () => navigation.navigate('EmotionCarbonMap') },
+    { label: 'Sosyal Sözleşmeler', icon: ProfileIcon, onPress: () => navigation.navigate('SocialContract') },
+    { label: 'Karbon Senfonisi', icon: BrainIcon, onPress: () => navigation.navigate('CarbonSymphony') },
+    { label: 'Kampüs Nefesi', icon: CompassIcon, onPress: () => navigation.navigate('CampusBreath') },
+    { label: 'Bio-Senkronizasyon', icon: BrainIcon, onPress: () => navigation.navigate('BioSync') },
+    { label: 'Karbon Borsası', icon: AIIcon, onPress: () => navigation.navigate('CarbonExchange') },
   ];
 
   if (!visible && !isOpen) return null;
@@ -313,7 +327,7 @@ function CustomDrawerPanel({ isOpen, onClose, navigation }: {
         <View style={[styles.drawerFooter, { paddingBottom: insets.bottom || 16 }]}>
           <TouchableOpacity
             style={styles.drawerMenuItem}
-            onPress={() => { onClose(); navigation.navigate('Profile'); }}
+            onPress={() => { onClose(); navigation.navigate('Settings'); }}
             activeOpacity={0.7}
           >
             <SettingsIcon color={colors.textSecondary} size={22} />
@@ -434,6 +448,14 @@ export default function RootNavigator() {
             <Stack.Screen name="TimeMachine" component={TimeMachineScreen} options={{ headerShown: false }} />
             <Stack.Screen name="CarbonMemory" component={CarbonMemoryScreen} options={{ headerShown: false }} />
             <Stack.Screen name="AIHub" component={AIHubScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="EmotionCarbonMap" component={EmotionCarbonMapScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="SocialContract" component={SocialContractScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="CarbonSymphony" component={CarbonSymphonyScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="CampusBreath" component={CampusBreathScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="BioSync" component={BioSyncScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="CarbonExchange" component={CarbonExchangeScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
           </>
         ) : (
           <>
